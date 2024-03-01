@@ -1,7 +1,10 @@
 import { View } from "react-native";
+import { Header } from "../../components/header";
 
 export function Passwords() {
-    return(
-        <View></View>
-    )
+  return (
+    <View>
+      <Header title="Minhas Senhas" />
+    </View>
+  );
 }
