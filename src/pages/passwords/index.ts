@@ -1,1 +1,2 @@
-export * from './Passwords'
+export * from "./Passwords";
+export * from "./PasswordCell";

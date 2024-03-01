@@ -7,6 +7,8 @@ import {
 } from "react-native";
 import * as ClipBoard from "expo-clipboard";
 import React from "react";
+import { useStorage } from "../../hooks";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
   password: string | undefined;
@@ -14,25 +16,39 @@ interface Props {
 }
 
 export function ModalPassword({ password, didTapBtnBack }: Props) {
+  const { saveItem } = useStorage();
+
   const didPressCopyPassword = async () => {
     if (!password) return;
 
-    await ClipBoard.setStringAsync(password)
-    alert('Senha copiada com sucesso')
+    await ClipBoard.setStringAsync(password);
+    alert("Sua senha foi copiada.");
+  };
+
+  const didTapBtnSave = async () => {
+    if (!password) return;
+
+    await saveItem("@pass", password);
+    alert("Senha salva com sucesso!");
+    didTapBtnBack();
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Senha Gerada</Text>
-        <Pressable style={styles.innerPassword} onLongPress={didPressCopyPassword}>
+        <Pressable
+          style={styles.innerPassword}
+          onLongPress={didPressCopyPassword}
+        >
           <Text style={styles.text}>{password}</Text>
+          <Ionicons color="white" size={24} name="clipboard-outline" />
         </Pressable>
         <View style={styles.buttonArea}>
           <TouchableOpacity style={styles.buttonBack} onPress={didTapBtnBack}>
             <Text style={styles.btnBackText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonSave}>
+          <TouchableOpacity style={styles.buttonSave} onPress={didTapBtnSave}>
             <Text style={styles.btnSaveText}>Salvar Senha</Text>
           </TouchableOpacity>
         </View>
@@ -64,9 +80,12 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     width: "80%",
     paddingVertical: 16,
+    paddingHorizontal: 12,
     borderRadius: 8,
     marginVertical: 20,
     alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   text: {
     color: "#ffff",
